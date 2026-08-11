@@ -1,0 +1,35 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+build/
+*.tsbuildinfo
+
+# Cache de tarefas do Turborepo (ADR-19) — nunca versionado
+.turbo/
+
+# Testes
+coverage/
+
+# Segredos — nenhum segredo versionado (seção 14)
+.env
+.env.*
+!.env.example
+
+# Editores e SO
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Configuração local do Claude Code
+.claude/settings.local.json
+
+# Artefatos de planejamento — não versionados por decisão (seção 10.2).
+# O que sobrevive à entrega é o ARQUITETURA.md.
+desafio.jpg
+documentacao-tecnica.md
+idempotencia.md
+paginacao-offset-vs-cursor.md
+sugestoes-tecnicas.md
