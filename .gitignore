@@ -28,7 +28,6 @@ Thumbs.db
 
 # Artefatos de planejamento — não versionados por decisão (seção 10.2).
 # O que sobrevive à entrega é o ARQUITETURA.md.
-desafio.jpg
 documentacao-tecnica.md
 idempotencia.md
 paginacao-offset-vs-cursor.md
