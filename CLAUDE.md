@@ -1,9 +1,12 @@
 # CLAUDE.md
 
-Guia para trabalhar neste repositório. A especificação completa é a
-[`documentacao-tecnica.md`](./documentacao-tecnica.md) — este arquivo é o resumo operacional
-e as regras que quebram em silêncio se ignoradas. Em caso de conflito, a
-`documentacao-tecnica.md` vence.
+Guia operacional para trabalhar neste repositório: as regras que quebram em silêncio se
+ignoradas, os comandos e as convenções.
+
+**A autoridade sobre arquitetura e decisões é o [`ARQUITETURA.md`](./ARQUITETURA.md)** — ele é
+versionado e é o que a próxima equipe lê. Em caso de conflito, ele vence. A
+`documentacao-tecnica.md` é o documento de planejamento, não versionado (seção 10.2), e serve
+como origem de requisitos, escopo e do grafo de etapas.
 
 ## Estado atual
 
@@ -11,19 +14,22 @@ Implementação em curso, seguindo o grafo de 56 etapas da seção 18.6. Ao cria
 também a estrutura de diretórios da seção 5.2 — não improvisar outra.
 
 **Já na `main`:** `chore/repo-workspaces` (pnpm workspaces, Turborepo, tsconfig base,
-`.gitignore`, `.gitattributes`) e `chore/repo-lint-format` (ESLint com as regras de camada,
-Prettier, Husky, lint-staged, commitlint). Ainda não existem `apps/` nem `packages/`.
+`.gitignore`, `.gitattributes`), `chore/repo-lint-format` (ESLint com as regras de camada,
+Prettier, Husky, lint-staged, commitlint), `ci/verify-commits` (pipeline em push na `main`),
+`feat/shared-cpf` e `feat/shared-schemas` (`packages/shared` completo) e
+`docs/arquitetura-base`. Ainda não existe `apps/`.
 
 **Ferramental local:** Node 24 e pnpm 10 instalados; **Docker ausente** — primeiro
 impedimento real em `feat/api-prisma-schema`, que precisa de um Postgres para gerar a
 migration. `gh` também não está instalado.
 
-| Documento                       | O que é                                                  | Status                         |
-| ------------------------------- | -------------------------------------------------------- | ------------------------------ |
-| `documentacao-tecnica.md`       | Especificação, 19 ADRs, grafo de dependências, checklist | Decisões tomadas               |
-| `paginacao-offset-vs-cursor.md` | Comparação que sustenta a ADR-14                         | Apoio                          |
-| `idempotencia.md`               | Plano da `Idempotency-Key` (futura ADR-20)               | **Proposta, não implementada** |
-| `sugestoes-tecnicas.md`         | Fila de candidatas e recusadas                           | **Proposta, não implementada** |
+| Documento                       | O que é                                          | Status                         |
+| ------------------------------- | ------------------------------------------------ | ------------------------------ |
+| `ARQUITETURA.md`                | Arquitetura e ADRs — **versionado, autoridade**  | Vivo, cresce por etapa         |
+| `documentacao-tecnica.md`       | Especificação, requisitos, grafo de dependências | Planejamento, não versionado   |
+| `paginacao-offset-vs-cursor.md` | Comparação que sustenta a ADR-14                 | Apoio                          |
+| `idempotencia.md`               | Plano da `Idempotency-Key`                       | **Proposta, não implementada** |
+| `sugestoes-tecnicas.md`         | Fila de candidatas e recusadas                   | **Proposta, não implementada** |
 
 Nada de `idempotencia.md` ou `sugestoes-tecnicas.md` está decidido. Não implementar, não
 citar como se estivesse na especificação.
