@@ -1,6 +1,7 @@
 // @ts-check
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import reactHooks from 'eslint-plugin-react-hooks';
 import prettier from 'eslint-config-prettier';
 import globals from 'globals';
 
@@ -96,6 +97,19 @@ export default tseslint.config(
     files: ['apps/api/src/**/*.orm-*.ts', 'apps/api/src/**/orm-*.ts'],
     rules: {
       '@typescript-eslint/no-restricted-imports': 'off',
+    },
+  },
+
+  // ─── Front ───────────────────────────────────────────────────────────────
+  // As regras de hooks não têm substituto: erram silenciosamente em runtime, e
+  // nem o compilador nem o teste pegam um hook chamado condicionalmente.
+  {
+    files: ['apps/web/src/**/*.{ts,tsx}'],
+    // `configs.flat[...]`, não `configs[...]`: o segundo ainda é formato
+    // eslintrc e o ESLint 9 recusa com "plugins must be an object".
+    extends: [reactHooks.configs.flat['recommended-latest']],
+    languageOptions: {
+      globals: { ...globals.browser },
     },
   },
 
