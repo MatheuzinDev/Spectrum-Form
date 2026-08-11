@@ -1,0 +1,12 @@
+# Normaliza fim de linha: LF no repositório, independente do SO de quem commita.
+* text=auto eol=lf
+
+# Colapsa o lockfile na review do pull request. Sem isto, o primeiro PR do
+# repositório nasce com milhares de linhas que ninguém escreveu, e o teto de
+# 500 linhas da seção 18.3 vira ficção já na primeira branch.
+pnpm-lock.yaml linguist-generated=true
+
+# Binários
+*.png binary
+*.jpg binary
+*.ico binary

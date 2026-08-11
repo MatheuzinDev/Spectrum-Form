@@ -1,0 +1,21 @@
+{
+  "name": "spectrum-form",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "db:migrate": "turbo run db:migrate",
+    "db:seed": "turbo run db:seed"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.8",
+    "typescript": "^5.9.3"
+  }
+}
