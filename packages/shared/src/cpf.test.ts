@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { isValidCpf, onlyDigits } from './cpf';
+import { formatCpf, isValidCpf, onlyDigits } from './cpf';
 
 describe('onlyDigits', () => {
   it('remove a máscara', () => {
@@ -9,6 +9,25 @@ describe('onlyDigits', () => {
 
   it('devolve string vazia quando não há dígito', () => {
     expect(onlyDigits('abc.def-gh')).toBe('');
+  });
+});
+
+describe('formatCpf', () => {
+  it('aplica a máscara sobre onze dígitos', () => {
+    expect(formatCpf('52998224725')).toBe('529.982.247-25');
+  });
+
+  it('é a inversa de onlyDigits', () => {
+    expect(onlyDigits(formatCpf('52998224725'))).toBe('52998224725');
+  });
+
+  it('normaliza antes de formatar', () => {
+    expect(formatCpf('529.982.247-25')).toBe('529.982.247-25');
+  });
+
+  it('devolve o valor inalterado quando não há onze dígitos', () => {
+    expect(formatCpf('5299822472')).toBe('5299822472');
+    expect(formatCpf('')).toBe('');
   });
 });
 

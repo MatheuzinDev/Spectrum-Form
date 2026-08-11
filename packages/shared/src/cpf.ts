@@ -14,6 +14,24 @@ export function onlyDigits(value: string): string {
 }
 
 /**
+ * Aplica a máscara `000.000.000-00`. É a inversa de `onlyDigits`, e existe para
+ * a **exibição**: a API responde com os onze dígitos como estão no banco
+ * (seção 7), e quem formata é quem mostra.
+ *
+ * Valor que não tenha exatamente onze dígitos volta inalterado — formatar pela
+ * metade produziria algo que parece um CPF e não é.
+ */
+export function formatCpf(value: string): string {
+  const cpf = onlyDigits(value);
+
+  if (cpf.length !== CPF_LENGTH) {
+    return value;
+  }
+
+  return `${cpf.slice(0, 3)}.${cpf.slice(3, 6)}.${cpf.slice(6, 9)}-${cpf.slice(9)}`;
+}
+
+/**
  * Calcula um dígito verificador. Os pesos são decrescentes a partir de
  * `weightStart`: 10..2 para o primeiro dígito, 11..2 para o segundo.
  */
