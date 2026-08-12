@@ -176,6 +176,12 @@ Scripts da raiz delegam ao `turbo run`. Em _cache hit_ o Turborepo **reproduz o 
 - Testes unitários **colocados** ao lado do arquivo testado. Dublês em memória ficam em
   `application/use-cases/in-memory/`, nunca em `infrastructure/`.
 - `strict: true`, sem `any`, sem `@ts-ignore`.
+- **Sem comentários no código.** Nenhum: nem inline, nem JSDoc, nem em arquivo de
+  configuração. O _porquê_ mora no `ARQUITETURA.md` e no corpo do commit — os dois lugares
+  que a próxima equipe lê. Comentário no fonte é uma terceira cópia da mesma afirmação, que
+  ninguém atualiza junto do código, e é exatamente o que a regra de "cada afirmação mora em
+  um lugar só" recusa. Quando um trecho parecer precisar de explicação, a saída é renomear,
+  extrair uma função ou registrar a decisão no `ARQUITETURA.md` — não comentar.
 - Conventional Commits com `scope-enum` **fechado**: `repo`, `shared`, `api`, `web`, `colors`,
   `clients`, `auth`, `health`, `cache`, `infra`, `proxy`, `ci`, `docs`, `deps`.
 - **Commits pequenos, um assunto cada.** Sem pull request, é o `git log` que precisa contar a
