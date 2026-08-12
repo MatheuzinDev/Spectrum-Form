@@ -78,7 +78,7 @@ consumido pelos dois lados.
 └── README.md
 ```
 
-Hoje existem `packages/shared` e a configuração da raiz. `apps/`, `infra/` e o
+Hoje existem `packages/shared`, `apps/web` e a configuração da raiz. `apps/api`, `infra/` e o
 `docker-compose.yml` entram nas etapas seguintes.
 
 Duas convenções que valem saber antes de criar arquivo:
@@ -329,6 +329,50 @@ direto cria um impasse circular, já que o check só roda depois do commit chega
 leitura por `git log --first-parent`, que agrupava commits por funcionalidade entregue; o
 histórico é linear e a única compensação é a disciplina de escopo nas mensagens. Religar tudo
 é barato no dia em que existir um segundo par de olhos.
+
+### ADR-22 — Uma paleta só: os tokens do desenho, com os nomes do shadcn como apelidos
+
+**Contexto.** O desenho define a paleta inteira — sete neutros com viés azul, um azul de ação,
+verde e vermelho só como estado, e as versões claras e escuras de cada um. Os componentes do
+shadcn/ui, por outro lado, referenciam nomes semânticos próprios: `background`, `foreground`,
+`primary`, `border`, `ring`. Se cada lado trouxer suas cores, o repositório passa a ter duas
+paletas, e a divergência entre elas é questão de tempo.
+
+**Decisão.** Existe uma paleta, e é a do desenho. Os tokens vivem em `:root` — fora do
+`@theme`, para responderem à cascata do tema — e o `@theme inline` os expõe como utilitárias
+apontando para `var(--token)`, em vez de copiar o valor. Os nomes do shadcn entram no mesmo
+bloco como **apelidos** sobre esses tokens. Recusada a alternativa de adotar a paleta do
+shadcn e descartar a do desenho, que jogaria fora decisões já tomadas sobre contraste e
+hierarquia.
+
+**Consequência.** Um componente da biblioteca renderiza nas cores do projeto sem saber que
+existe um projeto, e o modo escuro funciona sem que ele participe. Três custos, todos reais.
+O primeiro: a lista de apelidos precisa cobrir **todo** nome que os componentes usarem, e um
+nome faltando não gera erro nem aviso — aparece como componente sem cor, meses depois. O
+segundo: alguns componentes usam `var(--nome)` bruto em `style` inline, e não como utilitária;
+como o `@theme inline` gera `--color-nome`, esses precisam de um apelido adicional em `:root`,
+e o `index.css` traz a instrução de como conferir ao copiar um componente novo. O terceiro é
+uma colisão: `--muted` é texto secundário no desenho e fundo sutil no shadcn, então o nome
+bruto pertence ao desenho e o do shadcn vive apenas como utilitária.
+
+### ADR-23 — Tema por CSS, sem provider de React
+
+**Contexto.** O desenho tem modo claro e escuro completos, e o mockup os alterna de duas
+formas: por `prefers-color-scheme` e por um atributo `data-theme` na raiz. O componente de
+notificações que a CLI do shadcn copia, porém, lê o tema por JavaScript, com o `useTheme` do
+`next-themes` — o que pressupõe um provider e um framework que este projeto não usa.
+
+**Decisão.** O tema é CSS. A paleta troca por `prefers-color-scheme` e por `data-theme`, sem
+estado no React, sem provider e sem `next-themes`, que foi removido das dependências. O
+componente de notificações foi adaptado para seguir a preferência do sistema pelo mesmo
+critério. Adaptar é o esperado: `components/ui/` é código do projeto, não dependência.
+
+**Consequência.** Nenhum JavaScript participa da escolha de tema, o que elimina por
+construção o clarão de tema errado no primeiro quadro — o problema que os provedores de tema
+existem para resolver e frequentemente não resolvem. Os custos: não há seletor de tema na
+interface, apenas o atributo que um seletor futuro usaria; e todo componente copiado que
+assuma um provider precisará da mesma adaptação, uma por vez, sem aviso automático de que ela
+é necessária.
 
 ---
 
