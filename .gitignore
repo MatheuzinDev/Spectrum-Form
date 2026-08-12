@@ -1,24 +1,30 @@
+# Dependencies
 node_modules/
 
+# Build
 dist/
 build/
 *.tsbuildinfo
 
+# Cache
 .turbo/
 
+# Tests
 coverage/
 
+# Env
 .env
 .env.*
 !.env.example
 
+# Editors and OS
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
-
 .claude/settings.local.json
 
+# Planning
 documentacao-tecnica.md
 idempotencia.md
 paginacao-offset-vs-cursor.md

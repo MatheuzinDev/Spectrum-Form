@@ -182,6 +182,10 @@ Scripts da raiz delegam ao `turbo run`. Em _cache hit_ o Turborepo **reproduz o 
   ninguém atualiza junto do código, e é exatamente o que a regra de "cada afirmação mora em
   um lugar só" recusa. Quando um trecho parecer precisar de explicação, a saída é renomear,
   extrair uma função ou registrar a decisão no `ARQUITETURA.md` — não comentar.
+  **Única exceção: os cabeçalhos de seção do `.gitignore`**, de uma palavra e em inglês
+  (`# Dependencies`, `# Env`). Ali não há nome de variável nem função para carregar o
+  sentido, e o arquivo é uma lista plana que só se lê varrendo — o cabeçalho é estrutura,
+  não explicação.
 - Conventional Commits com `scope-enum` **fechado**: `repo`, `shared`, `api`, `web`, `colors`,
   `clients`, `auth`, `health`, `cache`, `infra`, `proxy`, `ci`, `docs`, `deps`.
 - **Commits pequenos, um assunto cada.** Sem pull request, é o `git log` que precisa contar a
