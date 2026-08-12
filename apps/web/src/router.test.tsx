@@ -1,11 +1,23 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { listColors } from '@/services/color.service';
+import { colorsFixture } from '@/tests/fixtures';
+import { renderWithQuery } from '@/tests/render';
 
 import { routes } from './router';
 
-function renderRota(rota: string) {
-  return render(<RouterProvider router={createMemoryRouter(routes, { initialEntries: [rota] })} />);
+vi.mock('@/services/color.service');
+
+beforeEach(() => {
+  vi.mocked(listColors).mockResolvedValue(colorsFixture);
+});
+
+function renderRoute(route: string) {
+  return renderWithQuery(
+    <RouterProvider router={createMemoryRouter(routes, { initialEntries: [route] })} />,
+  );
 }
 
 describe('router', () => {
@@ -15,27 +27,27 @@ describe('router', () => {
     ['/admin', 'Painel'],
     ['/admin/clients', 'Cadastros'],
     ['/admin/colors', 'Cores'],
-  ])('%s renderiza "%s"', async (rota, titulo) => {
-    renderRota(rota);
+  ])('%s renderiza "%s"', async (route, title) => {
+    renderRoute(route);
 
-    expect(await screen.findByRole('heading', { level: 1, name: titulo })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: title })).toBeInTheDocument();
   });
 
   it('mostra a navegação administrativa nas telas do painel', async () => {
-    renderRota('/admin/clients');
+    renderRoute('/admin/clients');
 
     expect(await screen.findByRole('navigation', { name: 'Área administrativa' })).toBeVisible();
   });
 
   it('não mostra a navegação administrativa na tela de login', async () => {
-    renderRota('/admin/login');
+    renderRoute('/admin/login');
 
     await screen.findByRole('heading', { level: 1, name: 'Entrar no painel' });
     expect(screen.queryByRole('navigation', { name: 'Área administrativa' })).toBeNull();
   });
 
   it('cai no 404 em caminho inexistente', async () => {
-    renderRota('/rota-que-nao-existe');
+    renderRoute('/route-que-nao-existe');
 
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Página não encontrada' }),
