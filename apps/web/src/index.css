@@ -103,6 +103,25 @@
     --shadow: 0 1px 2px rgb(22 33 45 / 0.05), 0 8px 24px -18px rgb(22 33 45 / 0.35);
   }
 
+  /* Os componentes copiados do shadcn/ui referenciam algumas variáveis brutas
+     em `style` inline, e não como utilitária. O `@theme inline` abaixo gera
+     `--color-popover`, não `--popover`: sem estes apelidos, a declaração é
+     ignorada pelo navegador e o componente sai com a cor padrão da biblioteca,
+     sem erro nenhum.
+
+     A lista cobre o que os componentes usam hoje. Ao copiar um componente
+     novo, `grep 'var(--' src/components/ui` e conferir se o nome existe aqui.
+
+     `--muted` não entra: no shadcn ele é um fundo sutil, e aqui já é o texto
+     secundário do desenho. O apelido do fundo vive só como utilitária
+     (`--color-muted`), onde não colide. */
+  :root {
+    --border: var(--line);
+    --popover: var(--surface);
+    --popover-foreground: var(--ink);
+    --radius: 0.625rem;
+  }
+
   body {
     background-color: var(--paper);
     color: var(--ink);
@@ -160,10 +179,17 @@
   --color-ring: var(--focus);
 
   --shadow-card: var(--shadow);
+
+  /* Sem isto, `rounded-md` e `rounded-lg` usariam os padrões do Tailwind (6px
+     e 8px) e os componentes sairiam menos arredondados que o desenho, que
+     trabalha em 10px e 12px. */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 @theme {
   --font-sans: 'Archivo Variable', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --radius: 0.625rem;
 }
