@@ -32,7 +32,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov'],
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/components/ui/**', 'src/main.tsx'],
+      exclude: ['src/components/ui/**', 'src/main.tsx', 'src/tests/**'],
     },
   },
 });
