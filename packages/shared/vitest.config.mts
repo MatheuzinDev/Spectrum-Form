@@ -1,3 +1,7 @@
+// Extensão `.mts`, e não `.ts`: este pacote é `"type": "commonjs"`, então um
+// `.ts` com `import` é carregado como CommonJS e o Vite avisa que isso deixa de
+// funcionar quando o carregamento nativo de configuração virar padrão. O `.mts`
+// é ESM independentemente do `type` do pacote.
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
