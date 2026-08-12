@@ -1,12 +1,13 @@
 import { fileURLToPath, URL } from 'node:url';
 
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 // `vitest/config` e não `vite`: é ele que estende a config do Vite com a chave
 // `test`. Importando de `vite`, o TypeScript recusa a chave como desconhecida.
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
 
   resolve: {
     alias: {

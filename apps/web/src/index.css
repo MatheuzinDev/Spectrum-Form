@@ -1,0 +1,169 @@
+@import 'tailwindcss';
+
+/* Archivo com os eixos de peso e largura: a hierarquia tipográfica do desenho
+   vem da largura (`font-stretch`), não do peso, e é por isso que se importa o
+   arquivo `wdth` — 90 kB de latin contra 35 kB do `wght`. É o custo aceito
+   dessa escolha.
+
+   A IBM Plex Mono não tem versão variável no Fontsource, então vem estática e
+   só no peso 400: ela é usada apenas onde há dígito que se alinha em coluna. */
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Os tokens do desenho.
+
+   Ficam em `:root`, e não dentro de `@theme`, porque precisam responder à
+   cascata: o mesmo nome carrega um valor no claro e outro no escuro. O
+   `@theme inline` abaixo os expõe como utilitárias apontando para a variável,
+   em vez de copiar o valor.
+   ───────────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --paper: #f7fafd;
+    --surface: #ffffff;
+    --mist: #edf3f9;
+    --line: #dbe4ef;
+    --line-soft: #e8eef6;
+    --ink: #16212d;
+    --muted: #5e7086;
+    --blue: #3d6fa6;
+    --blue-deep: #2b5c93;
+    --blue-wash: #e4edf7;
+    --ok: #2f7a5b;
+    --ok-wash: #e4f1eb;
+    --bad: #b04a40;
+    --bad-wash: #f8e9e7;
+    --focus: #2b5c93;
+    --on-blue: #ffffff;
+    --shadow: 0 1px 2px rgb(22 33 45 / 0.05), 0 8px 24px -18px rgb(22 33 45 / 0.35);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0e151c;
+      --surface: #141d26;
+      --mist: #1b2733;
+      --line: #27343f;
+      --line-soft: #202c38;
+      --ink: #e7eef6;
+      --muted: #94a4b5;
+      --blue: #7faad6;
+      --blue-deep: #9cc4ea;
+      --blue-wash: #1b2c3d;
+      --ok: #74c2a0;
+      --ok-wash: #162c25;
+      --bad: #e39288;
+      --bad-wash: #2e1e1c;
+      --focus: #9cc4ea;
+      --on-blue: #0e151c;
+      --shadow: 0 1px 2px rgb(0 0 0 / 0.35), 0 10px 30px -20px rgb(0 0 0 / 0.8);
+    }
+  }
+
+  /* Sobrescritas explícitas, para quando houver um seletor de tema. Não há
+     interface para trocá-lo — o atributo existe e a paleta responde. */
+  :root[data-theme='dark'] {
+    --paper: #0e151c;
+    --surface: #141d26;
+    --mist: #1b2733;
+    --line: #27343f;
+    --line-soft: #202c38;
+    --ink: #e7eef6;
+    --muted: #94a4b5;
+    --blue: #7faad6;
+    --blue-deep: #9cc4ea;
+    --blue-wash: #1b2c3d;
+    --ok: #74c2a0;
+    --ok-wash: #162c25;
+    --bad: #e39288;
+    --bad-wash: #2e1e1c;
+    --focus: #9cc4ea;
+    --on-blue: #0e151c;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.35), 0 10px 30px -20px rgb(0 0 0 / 0.8);
+  }
+
+  :root[data-theme='light'] {
+    --paper: #f7fafd;
+    --surface: #ffffff;
+    --mist: #edf3f9;
+    --line: #dbe4ef;
+    --line-soft: #e8eef6;
+    --ink: #16212d;
+    --muted: #5e7086;
+    --blue: #3d6fa6;
+    --blue-deep: #2b5c93;
+    --blue-wash: #e4edf7;
+    --ok: #2f7a5b;
+    --ok-wash: #e4f1eb;
+    --bad: #b04a40;
+    --bad-wash: #f8e9e7;
+    --focus: #2b5c93;
+    --on-blue: #ffffff;
+    --shadow: 0 1px 2px rgb(22 33 45 / 0.05), 0 8px 24px -18px rgb(22 33 45 / 0.35);
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   As utilitárias.
+
+   `inline` faz cada utilitária referenciar `var(--token)` em vez de copiar o
+   valor: sem isso, `bg-paper` congelaria a cor clara e o modo escuro não
+   chegaria a nada.
+
+   A segunda metade são os nomes semânticos que os componentes do shadcn/ui
+   usam. Eles são apelidos sobre os mesmos tokens — há uma paleta só, e a do
+   desenho é a fonte. Um nome esquecido aqui aparece como componente sem cor
+   quando ele chegar, não antes.
+   ───────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-mist: var(--mist);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-ink: var(--ink);
+  --color-muted-text: var(--muted);
+  --color-brand: var(--blue);
+  --color-brand-deep: var(--blue-deep);
+  --color-brand-wash: var(--blue-wash);
+  --color-ok: var(--ok);
+  --color-ok-wash: var(--ok-wash);
+  --color-bad: var(--bad);
+  --color-bad-wash: var(--bad-wash);
+  --color-on-brand: var(--on-blue);
+
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--blue);
+  --color-primary-foreground: var(--on-blue);
+  --color-secondary: var(--mist);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--mist);
+  --color-muted-foreground: var(--muted);
+  --color-accent: var(--blue-wash);
+  --color-accent-foreground: var(--blue-deep);
+  --color-destructive: var(--bad);
+  --color-destructive-foreground: var(--on-blue);
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--focus);
+
+  --shadow-card: var(--shadow);
+}
+
+@theme {
+  --font-sans: 'Archivo Variable', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --radius: 0.625rem;
+}
