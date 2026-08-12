@@ -4,7 +4,6 @@ import { describe, expect, it } from 'vitest';
 
 import { routes } from './router';
 
-/** Monta as rotas de produção em memória, na URL pedida. */
 function renderRota(rota: string) {
   return render(<RouterProvider router={createMemoryRouter(routes, { initialEntries: [rota] })} />);
 }
@@ -28,9 +27,6 @@ describe('router', () => {
     expect(await screen.findByRole('navigation', { name: 'Área administrativa' })).toBeVisible();
   });
 
-  // A tela de login é a única rota sob /admin que fica fora do AdminLayout:
-  // mostrar a navegação do painel para quem ainda não entrou seria oferecer
-  // atalhos para telas que ela não pode ver.
   it('não mostra a navegação administrativa na tela de login', async () => {
     renderRota('/admin/login');
 
@@ -38,8 +34,6 @@ describe('router', () => {
     expect(screen.queryByRole('navigation', { name: 'Área administrativa' })).toBeNull();
   });
 
-  // Com o try_files do NGINX, qualquer caminho carrega a aplicação. Sem a rota
-  // curinga, o usuário receberia uma tela em branco em vez de um erro.
   it('cai no 404 em caminho inexistente', async () => {
     renderRota('/rota-que-nao-existe');
 

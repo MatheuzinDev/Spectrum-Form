@@ -1,7 +1,5 @@
 name: CI
 
-# Só push na main: desde a seção 18.1 não há pull request, e um gatilho
-# `pull_request:` seria configuração morta apontando para um fluxo inexistente.
 on:
   push:
     branches: [main]
@@ -11,15 +9,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Os commits já estão na main quando este job roda, então ele não barra nada:
-  # reporta. É a vigilância que sobrou depois que o pull request saiu do fluxo,
-  # e ainda assim vale mais do que só o gancho local, que some no --no-verify.
   commits:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          # Sem histórico, a action não delimita o intervalo de commits do push.
           fetch-depth: 0
       - uses: wagoid/commitlint-github-action@v6
 
@@ -30,21 +24,13 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          # 22 porque é o que as imagens fixam. O CI deve parecer com produção,
-          # não com a máquina de quem escreve.
           node-version: 22
           cache: pnpm
       - uses: actions/cache@v4
         with:
           path: .turbo
-          # A key inclui o SHA para sempre gravar entrada nova; quem recupera a
-          # execução anterior é o restore-keys por prefixo.
           key: turbo-${{ runner.os }}-${{ github.sha }}
           restore-keys: turbo-${{ runner.os }}-
       - run: pnpm install --frozen-lockfile
-      # O mesmo comando que roda na máquina local: lint, format:check, typecheck
-      # e build. Duas listas mantidas em paralelo divergem.
       - run: pnpm check
-      # Passa trivialmente enquanto não houver pacote. Entra agora para que o
-      # primeiro teste escrito seja executado sem ninguém lembrar deste passo.
       - run: pnpm test

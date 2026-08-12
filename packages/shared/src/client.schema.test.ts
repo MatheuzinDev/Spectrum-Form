@@ -10,7 +10,6 @@ const valido = {
   notes: 'Cliente preferencial',
 };
 
-/** Devolve a mensagem do primeiro erro do campo, ou undefined se ele passou. */
 function erroDe(input: unknown, campo: string): string | undefined {
   const resultado = createClientSchema.safeParse(input);
   if (resultado.success) return undefined;
@@ -33,8 +32,6 @@ describe('createClientSchema', () => {
       expect(resultado.cpf).toBe('52998224725');
     });
 
-    // As duas refine são funções distintas, e cada uma precisa do seu caso:
-    // uma cobre a contagem, a outra o dígito verificador.
     it('recusa quando não há onze dígitos', () => {
       expect(erroDe({ ...valido, cpf: '5299822472' }, 'cpf')).toBe('CPF deve ter 11 dígitos');
     });
@@ -107,7 +104,6 @@ describe('clientResponseSchema', () => {
     expect(clientResponseSchema.safeParse({ ...resposta, notes: null }).success).toBe(true);
   });
 
-  // Guarda de contrato: se a API voltar a mascarar o CPF, este teste quebra.
   it('recusa CPF com máscara', () => {
     expect(clientResponseSchema.safeParse({ ...resposta, cpf: '529.982.247-25' }).success).toBe(
       false,

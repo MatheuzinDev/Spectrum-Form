@@ -7,15 +7,6 @@ import {
 } from 'lucide-react';
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
 
-/**
- * Adaptado do arquivo que a CLI copiou, que lia o tema por JavaScript com o
- * `useTheme` do `next-themes` — uma dependência que pressupõe um provider e um
- * framework que este projeto não usa.
- *
- * Aqui o tema é CSS: a paleta troca por `prefers-color-scheme` e por
- * `data-theme` no `index.css`, sem estado no React. O `theme="system"` faz o
- * Sonner seguir a preferência do sistema pelo mesmo critério.
- */
 const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner

@@ -8,14 +8,6 @@ const links = [
   { to: '/admin/colors', label: 'Cores', end: false },
 ];
 
-/**
- * Casca das telas administrativas: a navegação do mockup e o `Outlet` das
- * rotas aninhadas.
- *
- * **Não protege nada ainda.** O `ProtectedRoute` chega em `feat/web-auth`,
- * junto do que permite saber se há sessão — enquanto isso, `/admin/*` está
- * aberto, e é estado temporário.
- */
 export function AdminLayout() {
   return (
     <div className="min-h-dvh">

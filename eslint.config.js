@@ -1,4 +1,3 @@
-// @ts-check
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -18,9 +17,6 @@ export default tseslint.config(
       globals: { ...globals.node },
     },
     rules: {
-      // Seção 15: sem `any` e sem `@ts-ignore`. O `ts-expect-error` continua
-      // permitido com descrição, porque ele falha quando o erro deixa de existir —
-      // é o oposto de silenciar sem prazo de validade.
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/ban-ts-comment': [
         'error',
@@ -32,12 +28,6 @@ export default tseslint.config(
       ],
     },
   },
-
-  // ─── Fronteiras do hexágono (seção 5.3) ──────────────────────────────────
-  // A tabela de camadas deixa de ser convenção e passa a ser verificada. É a
-  // razão declarada na seção 15 para manter ESLint em vez de uma ferramenta
-  // única, e o único controle automatizado dessas fronteiras agora que não há
-  // revisão de código (seção 18.5).
 
   {
     files: ['apps/api/src/*/domain/**'],
@@ -74,9 +64,6 @@ export default tseslint.config(
     },
   },
 
-  // Fora dos arquivos `orm-*`, nenhum arquivo do módulo importa @prisma/client
-  // (seção 5.4). Aqui a regra cobre o hexágono inteiro; os adapters de ORM são
-  // reabilitados logo abaixo.
   {
     files: ['apps/api/src/*/infrastructure/**'],
     rules: {
@@ -100,13 +87,8 @@ export default tseslint.config(
     },
   },
 
-  // ─── Front ───────────────────────────────────────────────────────────────
-  // As regras de hooks não têm substituto: erram silenciosamente em runtime, e
-  // nem o compilador nem o teste pegam um hook chamado condicionalmente.
   {
     files: ['apps/web/src/**/*.{ts,tsx}'],
-    // `configs.flat[...]`, não `configs[...]`: o segundo ainda é formato
-    // eslintrc e o ESLint 9 recusa com "plugins must be an object".
     extends: [reactHooks.configs.flat['recommended-latest']],
     languageOptions: {
       globals: { ...globals.browser },

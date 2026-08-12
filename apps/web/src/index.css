@@ -1,23 +1,8 @@
 @import 'tailwindcss';
 
-/* Archivo com os eixos de peso e largura: a hierarquia tipográfica do desenho
-   vem da largura (`font-stretch`), não do peso, e é por isso que se importa o
-   arquivo `wdth` — 90 kB de latin contra 35 kB do `wght`. É o custo aceito
-   dessa escolha.
-
-   A IBM Plex Mono não tem versão variável no Fontsource, então vem estática e
-   só no peso 400: ela é usada apenas onde há dígito que se alinha em coluna. */
 @import '@fontsource-variable/archivo/wdth.css';
 @import '@fontsource/ibm-plex-mono/400.css';
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Os tokens do desenho.
-
-   Ficam em `:root`, e não dentro de `@theme`, porque precisam responder à
-   cascata: o mesmo nome carrega um valor no claro e outro no escuro. O
-   `@theme inline` abaixo os expõe como utilitárias apontando para a variável,
-   em vez de copiar o valor.
-   ───────────────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
     --paper: #f7fafd;
@@ -61,8 +46,6 @@
     }
   }
 
-  /* Sobrescritas explícitas, para quando houver um seletor de tema. Não há
-     interface para trocá-lo — o atributo existe e a paleta responde. */
   :root[data-theme='dark'] {
     --paper: #0e151c;
     --surface: #141d26;
@@ -103,18 +86,6 @@
     --shadow: 0 1px 2px rgb(22 33 45 / 0.05), 0 8px 24px -18px rgb(22 33 45 / 0.35);
   }
 
-  /* Os componentes copiados do shadcn/ui referenciam algumas variáveis brutas
-     em `style` inline, e não como utilitária. O `@theme inline` abaixo gera
-     `--color-popover`, não `--popover`: sem estes apelidos, a declaração é
-     ignorada pelo navegador e o componente sai com a cor padrão da biblioteca,
-     sem erro nenhum.
-
-     A lista cobre o que os componentes usam hoje. Ao copiar um componente
-     novo, `grep 'var(--' src/components/ui` e conferir se o nome existe aqui.
-
-     `--muted` não entra: no shadcn ele é um fundo sutil, e aqui já é o texto
-     secundário do desenho. O apelido do fundo vive só como utilitária
-     (`--color-muted`), onde não colide. */
   :root {
     --border: var(--line);
     --popover: var(--surface);
@@ -129,18 +100,6 @@
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   As utilitárias.
-
-   `inline` faz cada utilitária referenciar `var(--token)` em vez de copiar o
-   valor: sem isso, `bg-paper` congelaria a cor clara e o modo escuro não
-   chegaria a nada.
-
-   A segunda metade são os nomes semânticos que os componentes do shadcn/ui
-   usam. Eles são apelidos sobre os mesmos tokens — há uma paleta só, e a do
-   desenho é a fonte. Um nome esquecido aqui aparece como componente sem cor
-   quando ele chegar, não antes.
-   ───────────────────────────────────────────────────────────────────────── */
 @theme inline {
   --color-paper: var(--paper);
   --color-surface: var(--surface);
@@ -180,9 +139,6 @@
 
   --shadow-card: var(--shadow);
 
-  /* Sem isto, `rounded-md` e `rounded-lg` usariam os padrões do Tailwind (6px
-     e 8px) e os componentes sairiam menos arredondados que o desenho, que
-     trabalha em 10px e 12px. */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

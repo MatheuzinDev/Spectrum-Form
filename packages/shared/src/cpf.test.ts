@@ -53,9 +53,6 @@ describe('isValidCpf', () => {
     expect(isValidCpf('52998224726')).toBe(false);
   });
 
-  // O caso que o cálculo ingênuo deixa passar: para uma sequência de um dígito
-  // só, a conta dos verificadores fecha. Sem a rejeição explícita do cpf.ts,
-  // todos os dez seriam aceitos.
   it.each([
     '00000000000',
     '11111111111',
