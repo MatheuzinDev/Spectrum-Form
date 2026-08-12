@@ -35,5 +35,16 @@ export default defineConfig({
     globals: false,
     setupFiles: ['./src/tests/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov'],
+      include: ['src/**/*.{ts,tsx}'],
+      // Os primitivos vieram copiados da CLI e não são testados aqui; as
+      // cascas de página saem conforme cada tela real chega.
+      exclude: ['src/components/ui/**', 'src/main.tsx'],
+      // Sem limite, de propósito: o único do projeto é o de `packages/shared`,
+      // onde ele significa alguma coisa. O relatório existe para ser lido, e
+      // para o `outputs` do turbo.json descrever a tarefa com honestidade.
+    },
   },
 });
