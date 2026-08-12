@@ -81,7 +81,12 @@ consumido pelos dois lados.
 Hoje existem `packages/shared`, `apps/web` e a configuração da raiz. `apps/api`, `infra/` e o
 `docker-compose.yml` entram nas etapas seguintes.
 
-Duas convenções que valem saber antes de criar arquivo:
+**Um acoplamento invisível.** O `apps/web/index.html` monta a aplicação em
+`<div id="root">`, e o smoke test do CI verifica esse trecho **literalmente**, com um `grep`,
+para provar que o front está sendo servido pelo proxy. Renomear o id quebra o pipeline num
+lugar sem relação aparente com o front.
+
+Três convenções que valem saber antes de criar arquivo:
 
 **Teste ao lado do arquivo testado.** `cpf.ts` e `cpf.test.ts` no mesmo diretório. Uma árvore
 de testes espelhando a de código exige manutenção dupla a cada arquivo movido, e o teste some
@@ -309,6 +314,12 @@ do tree-shaking fino que o ESM permitiria — irrelevante para um pacote de dois
 tipo de coisa que deixa de ser irrelevante quando ele cresce. Se o Nest migrar para ESM, a
 saída é build duplo, e esta ADR é revisada.
 
+Há um efeito colateral que esta decisão não previa e que já apareceu: qualquer arquivo `.ts`
+do pacote com sintaxe ESM é carregado como CommonJS, e ferramentas passam a avisar que isso
+deixará de funcionar. É por isso que a configuração do Vitest ali é `vitest.config.mts` — a
+extensão `.mts` é ESM independentemente do `type` do pacote. Vale para qualquer arquivo de
+configuração que venha a existir em `packages/shared`.
+
 ### ADR-21 — Commits direto na `main`, sem pull request
 
 **Contexto.** O projeto tem um desenvolvedor só e prazo curto. O desenho original previa
@@ -350,10 +361,19 @@ existe um projeto, e o modo escuro funciona sem que ele participe. Três custos,
 O primeiro: a lista de apelidos precisa cobrir **todo** nome que os componentes usarem, e um
 nome faltando não gera erro nem aviso — aparece como componente sem cor, meses depois. O
 segundo: alguns componentes usam `var(--nome)` bruto em `style` inline, e não como utilitária;
-como o `@theme inline` gera `--color-nome`, esses precisam de um apelido adicional em `:root`,
-e o `index.css` traz a instrução de como conferir ao copiar um componente novo. O terceiro é
-uma colisão: `--muted` é texto secundário no desenho e fundo sutil no shadcn, então o nome
-bruto pertence ao desenho e o do shadcn vive apenas como utilitária.
+como o `@theme inline` gera `--color-nome`, esses precisam de um apelido adicional em `:root`.
+O terceiro é uma colisão: `--muted` é texto secundário no desenho e fundo sutil no shadcn,
+então o nome bruto pertence ao desenho e o do shadcn vive apenas como utilitária.
+
+**Ao copiar um componente novo da CLI**, o passo que evita o primeiro e o segundo custo é
+listar as variáveis brutas que ele referencia e conferir se cada uma existe em `:root`:
+
+```bash
+grep -ohE 'var\(--[a-z-]+\)' apps/web/src/components/ui/*.tsx | sort -u
+```
+
+As que começam com `--radix-` são fornecidas pelo Radix em tempo de execução e não precisam
+de apelido.
 
 ### ADR-23 — Tema por CSS, sem provider de React
 
@@ -373,6 +393,23 @@ existem para resolver e frequentemente não resolvem. Os custos: não há seleto
 interface, apenas o atributo que um seletor futuro usaria; e todo componente copiado que
 assuma um provider precisará da mesma adaptação, uma por vez, sem aviso automático de que ela
 é necessária.
+
+### ADR-24 — O roteador não busca dados
+
+**Contexto.** O React Router oferece `loader` e `action` por rota, um mecanismo completo de
+busca de dados acoplado à navegação. O projeto já escolheu o TanStack Query para essa função.
+Nada impede usar os dois, e é justamente aí que está o risco.
+
+**Decisão.** Nenhuma rota tem `loader`. O roteador cuida de caminho, aninhamento e fronteira
+de erro; os dados vêm sempre da mesma camada. Duas formas de buscar não aparecem por decisão
+consciente — aparecem quando alguém acha mais prático carregar uma coisa pequena num
+`loader`, e a partir daí metade da aplicação busca de um jeito e metade de outro, com dois
+caches que não se conhecem e nenhuma resposta simples para "de onde vem este dado?".
+
+**Consequência.** Há um lugar só para perguntar de onde vem um dado, e o roteador continua
+substituível. O custo é abrir mão da precarga em paralelo com a transição de rota, que é a
+vantagem real dos loaders: aqui a navegação acontece primeiro e a consulta começa depois, com
+o estado de carregamento aparecendo na tela em vez de antes dela.
 
 ---
 
