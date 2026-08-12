@@ -28,6 +28,7 @@ export default defineConfig({
     globals: false,
     setupFiles: ['./src/tests/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
+    env: { VITE_USE_MOCKS: 'false' },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
