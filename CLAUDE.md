@@ -176,6 +176,11 @@ Scripts da raiz delegam ao `turbo run`. Em _cache hit_ o Turborepo **reproduz o 
 - Testes unitários **colocados** ao lado do arquivo testado. Dublês em memória ficam em
   `application/use-cases/in-memory/`, nunca em `infrastructure/`.
 - `strict: true`, sem `any`, sem `@ts-ignore`.
+- **Identificadores em inglês, sempre.** Variáveis, funções, tipos, parâmetros, chaves de
+  objeto e nomes de arquivo. Nada de `const CINCO_MINUTOS` ou `function erroDe`. O código
+  convive com bibliotecas, tipos e APIs em inglês, e alternar de idioma no meio de uma
+  expressão é atrito de leitura sem contrapartida. **Texto para o usuário e descrição de
+  teste continuam em português** — aquilo é conteúdo, não identificador.
 - **Sem comentários no código.** Nenhum: nem inline, nem JSDoc, nem em arquivo de
   configuração. O _porquê_ mora no `ARQUITETURA.md` e no corpo do commit — os dois lugares
   que a próxima equipe lê. Comentário no fonte é uma terceira cópia da mesma afirmação, que
