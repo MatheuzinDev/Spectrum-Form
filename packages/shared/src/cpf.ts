@@ -1,4 +1,8 @@
-const CPF_LENGTH = 11;
+export const CPF_LENGTH = 11;
+
+const CPF_SEPARATORS = 3;
+
+export const CPF_MASK_LENGTH = CPF_LENGTH + CPF_SEPARATORS;
 
 export function onlyDigits(value: string): string {
   return value.replace(/\D/g, '');

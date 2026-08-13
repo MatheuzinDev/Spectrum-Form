@@ -1,18 +1,26 @@
 import { z } from 'zod';
 
 import { colorSchema } from './color.schema';
-import { isValidCpf, onlyDigits } from './cpf';
+import { CPF_LENGTH, isValidCpf, onlyDigits } from './cpf';
 
-const CPF_LENGTH = 11;
+export const CLIENT_LIMITS = {
+  fullName: { min: 3, max: 120 },
+  notes: { max: 500 },
+} as const;
 
 export const createClientSchema = z.object({
-  fullName: z.string().trim().min(3).max(120).describe('Nome completo do cliente'),
+  fullName: z
+    .string()
+    .trim()
+    .min(CLIENT_LIMITS.fullName.min)
+    .max(CLIENT_LIMITS.fullName.max)
+    .describe('Nome completo do cliente'),
   cpf: z
     .string()
     .transform(onlyDigits)
-    .refine((value) => value.length === CPF_LENGTH, 'CPF deve ter 11 dígitos')
+    .refine((value) => value.length === CPF_LENGTH, `CPF deve ter ${CPF_LENGTH} dígitos`)
     .refine(isValidCpf, 'CPF inválido')
-    .describe('Apenas dígitos, 11 caracteres'),
+    .describe(`Apenas dígitos, ${CPF_LENGTH} caracteres`),
   email: z
     .string()
     .trim()
@@ -20,7 +28,7 @@ export const createClientSchema = z.object({
     .pipe(z.email())
     .describe('E-mail, normalizado para minúsculas'),
   colorId: z.number().int().positive().describe('Id de uma cor ativa'),
-  notes: z.string().trim().max(500).optional().describe('Observações livres'),
+  notes: z.string().trim().max(CLIENT_LIMITS.notes.max).optional().describe('Observações livres'),
 });
 
 export type CreateClientInput = z.input<typeof createClientSchema>;

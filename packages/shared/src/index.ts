@@ -1,7 +1,8 @@
-export { formatCpf, isValidCpf, onlyDigits } from './cpf';
+export { CPF_LENGTH, CPF_MASK_LENGTH, formatCpf, isValidCpf, onlyDigits } from './cpf';
 export {
   clientPageSchema,
   clientResponseSchema,
+  CLIENT_LIMITS,
   createClientSchema,
   type ClientPage,
   type ClientResponse,
