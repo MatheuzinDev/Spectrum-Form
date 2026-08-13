@@ -26,6 +26,9 @@ importers:
       eslint-plugin-react-hooks:
         specifier: ^7.1.1
         version: 7.1.1(eslint@9.39.5(jiti@2.7.0))
+      eslint-plugin-react-refresh:
+        specifier: ^0.5.4
+        version: 0.5.4(eslint@9.39.5(jiti@2.7.0))
       globals:
         specifier: ^17.9.0
         version: 17.9.0
@@ -2085,6 +2088,11 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0 || ^10.0.0
+
+  eslint-plugin-react-refresh@0.5.4:
+    resolution: {integrity: sha512-7bqTKz7T0r+HKWFarNXByDE9/5+73wI2ru+M3zuqGbR7s/b/5/pQJXZoufWlrngqGqoZto73ZkGumCdLxk+4rw==}
+    peerDependencies:
+      eslint: ^9 || ^10
 
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
@@ -4610,7 +4618,7 @@ snapshots:
       obug: 2.1.4
       std-env: 4.2.0
       tinyrainbow: 3.1.1
-      vitest: 4.1.10(@types/node@24.13.3)(@vitest/coverage-v8@4.1.10)(jsdom@30.0.1)(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
+      vitest: 4.1.10(@types/node@26.2.0)(@vitest/coverage-v8@4.1.10)(jsdom@30.0.1)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
 
   '@vitest/expect@4.1.10':
     dependencies:
@@ -4915,6 +4923,10 @@ snapshots:
       zod-validation-error: 4.0.2(zod@4.4.3)
     transitivePeerDependencies:
       - supports-color
+
+  eslint-plugin-react-refresh@0.5.4(eslint@9.39.5(jiti@2.7.0)):
+    dependencies:
+      eslint: 9.39.5(jiti@2.7.0)
 
   eslint-scope@8.4.0:
     dependencies:

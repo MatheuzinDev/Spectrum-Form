@@ -176,6 +176,17 @@ Scripts da raiz delegam ao `turbo run`. Em _cache hit_ o Turborepo **reproduz o 
 - Testes unitários **colocados** ao lado do arquivo testado. Dublês em memória ficam em
   `application/use-cases/in-memory/`, nunca em `infrastructure/`.
 - `strict: true`, sem `any`, sem `@ts-ignore`.
+- **Onde uma constante mora depende de quem é o conhecimento**, não da extensão do arquivo.
+  Se servidor e front precisam concordar sobre o valor, ele é do contrato e mora em
+  `packages/shared`, exportado pelo módulo que já é dono do assunto — nunca em um
+  `constants.ts` de depósito. Lógica reutilizável sem JSX vai para `apps/web/src/lib`. O que
+  é usado por um componente só e não significa nada fora dele fica **ao lado dele**: mover
+  cria salto de navegação sem ganho.
+- **Um arquivo `.tsx` exporta apenas componentes.** Não é estética: quando um módulo exporta
+  outra coisa, o Fast Refresh não preserva estado e recarrega a página a cada edição. Cobrado
+  pelo `eslint-plugin-react-refresh`. Os primitivos de `components/ui/` estão fora da regra —
+  a CLI que os gera exporta funções de variante, e reescrevê-los a cada cópia seria brigar com
+  a ferramenta por um ganho que só importa em arquivo editado com frequência.
 - **Identificadores em inglês, sempre.** Variáveis, funções, tipos, parâmetros, chaves de
   objeto e nomes de arquivo. Nada de `const CINCO_MINUTOS` ou `function erroDe`. O código
   convive com bibliotecas, tipos e APIs em inglês, e alternar de idioma no meio de uma
