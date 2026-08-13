@@ -1,6 +1,4 @@
-import { onlyDigits } from '@repo/shared';
-
-const CPF_LENGTH = 11;
+import { CPF_LENGTH, onlyDigits } from '@repo/shared';
 
 export function maskCpf(value: string): string {
   const digits = onlyDigits(value).slice(0, CPF_LENGTH);

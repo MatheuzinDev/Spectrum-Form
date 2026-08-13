@@ -1,5 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  CLIENT_LIMITS,
+  CPF_MASK_LENGTH,
   createClientSchema,
   type ClientResponse,
   type CreateClientData,
@@ -25,8 +27,6 @@ import { createClient } from '@/services/client.service';
 import { ApiError } from '@/services/http';
 
 import { ColorPicker } from './ColorPicker';
-
-const NOTES_MAX_LENGTH = 500;
 
 const EMPTY_FORM: CreateClientInput = {
   fullName: '',
@@ -111,7 +111,7 @@ export function ClientForm({ onCreated, onColorChange }: ClientFormProps) {
                   inputMode="numeric"
                   autoComplete="off"
                   placeholder="000.000.000-00"
-                  maxLength={14}
+                  maxLength={CPF_MASK_LENGTH}
                   className="font-mono tabular-nums"
                   {...field}
                   onChange={(event) => {
@@ -168,13 +168,13 @@ export function ClientForm({ onCreated, onColorChange }: ClientFormProps) {
               <FormLabel>Observações</FormLabel>
               <FormControl>
                 <Textarea
-                  maxLength={NOTES_MAX_LENGTH}
+                  maxLength={CLIENT_LIMITS.notes.max}
                   placeholder="Algo que a gente deva saber. Pode deixar em branco."
                   {...field}
                 />
               </FormControl>
               <FormDescription className="text-right font-mono tabular-nums">
-                {notes.length}/{NOTES_MAX_LENGTH}
+                {notes.length}/{CLIENT_LIMITS.notes.max}
               </FormDescription>
               <FormMessage />
             </FormItem>
