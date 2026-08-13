@@ -239,6 +239,46 @@ qualquer coisa funcionar, e um lockfile único que concentra conflito quando dua
 em dependências ao mesmo tempo. E resolve apenas **instalação**: qual tarefa roda, em que
 ordem e o que pode ser pulado é problema da ADR-19.
 
+### ADR-02 — NestJS sobre o adapter Fastify, pela redação dos logs
+
+**Contexto.** O projeto continua com outra equipe, então a estrutura precisa ser reconhecível
+por qualquer desenvolvedor Node — o que o NestJS entrega, e cuja injeção de dependência é o
+que torna as portas do hexágono substituíveis sem gambiarra. Falta escolher o adapter HTTP. E
+há um requisito que não é de framework: **CPF, e-mail, senha e credenciais não podem ir para o
+log**, nunca, inclusive em um `logger.error` escrito daqui a seis meses por alguém que não leu
+este documento.
+
+**Decisão.** Fastify, **pelo logging e não pela performance**. O `pino` é o logger nativo do
+Fastify, e com ele a exigência acima vira configuração de um objeto no `main.ts` em vez de
+disciplina de cada pessoa que escreve um log. O ganho de throughput existe e é irrelevante
+nesta escala, onde o tempo de resposta é dominado pelo Postgres — citá-lo como justificativa
+seria desonesto. Junto vêm log estruturado em JSON e um `reqId` por requisição, que é o que
+sustenta a decisão de dispensar Prometheus.
+
+**A redação é por nome de campo, não por caminho.** A primeira versão desta decisão listava
+`req.body.cpf`, `req.headers.cookie` e afins. Ao implementar, verificou-se que **esses
+caminhos são inertes**: qualquer objeto logado sob a chave `req` passa antes pelo serializador
+padrão do Fastify, que preserva apenas `method`, `url`, `hostname` e `remoteAddress` — corpo e
+cabeçalhos nunca chegam ao log, e portanto nunca há o que redigir ali. A lista real usa o
+**nome do campo** em três níveis de aninhamento (`cpf`, `*.cpf`, `*.*.cpf`), porque o nome é o
+que não muda quando o objeto logado muda de forma. Ela vive em `shared/logging/redact.ts`,
+isolada do `main.ts` justamente para poder ser verificada.
+
+**Consequência.** O dado sensível fica protegido pelo nome onde quer que apareça, e a lista
+cresce junto com a superfície sensível em um arquivo só. Os custos: mais boilerplate do que um
+framework mínimo exigiria para um CRUD de duas tabelas; Helmet e Supertest passam a exigir as
+variantes Fastify de cada um, contra a maioria do material sobre NestJS, que assume Express; e
+a proteção **para no terceiro nível de aninhamento** — um `cpf` embaixo de quatro objetos
+escapa. Redigir por profundidade arbitrária custaria varrer todo objeto logado, o que é caro
+no caminho quente.
+
+**`trustProxy: true` é obrigatório, e depende de outra decisão.** Com o NGINX na frente, todo
+pacote chega à API com o IP do container do proxy. Sem `trustProxy`, o rate limit por cliente
+passa a chavear todo mundo pelo mesmo valor e vira global — falha silenciosa, sem erro em log
+algum. E só é seguro **porque** o container da API não publica porta: exposta, qualquer um
+forjaria o `X-Forwarded-For` e escolheria o próprio IP. As duas decisões se sustentam
+mutuamente.
+
 ### ADR-03 — Zod como fonte única de verdade
 
 **Contexto.** O padrão do NestJS é DTO em classe com `class-validator`, o que inviabiliza
