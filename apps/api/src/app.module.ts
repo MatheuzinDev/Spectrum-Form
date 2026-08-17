@@ -1,6 +1,14 @@
-import { Module } from '@nestjs/common';
+import { Module, type DynamicModule } from '@nestjs/common';
 
-@Module({
-  imports: [],
-})
-export class AppModule {}
+import type { AppConfig } from './shared/config/app.config';
+import { ConfigModule } from './shared/config/config.module';
+
+@Module({})
+export class AppModule {
+  static forRoot(config: AppConfig): DynamicModule {
+    return {
+      module: AppModule,
+      imports: [ConfigModule.forRoot(config)],
+    };
+  }
+}
